@@ -54,13 +54,13 @@ public class ImageData {
 
 
 
-    public ImageData(BufferedImage image, int i, int j, int x, int y, int totalNum) {
+    public ImageData(BufferedImage image, int i, int j, int x, int y) {
         this.image = image;
         this.i = i;
         this.j = j;
         this.x = x;
         this.y = y;
-        this.totalNum = totalNum;
+      //  this.totalNum = totalNum;
     }
     private int i , j , x , y , totalNum;
     private BufferedImage image;

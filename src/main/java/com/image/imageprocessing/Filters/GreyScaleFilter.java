@@ -4,6 +4,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class GreyScaleFilter implements ImageFilter {
+    public GreyScaleFilter() {
+
+    }
+
     @Override
     public BufferedImage filter(BufferedImage original) {
         int width = original.getWidth();

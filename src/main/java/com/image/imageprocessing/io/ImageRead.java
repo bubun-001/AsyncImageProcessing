@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import static javafx.scene.input.KeyCode.T;
 
-public class FileImageIO implements ImageReadInf  {
+public class ImageRead implements ImageReadInf  {
 
     @Override
     public  <T> BufferedImage readImage(T src){
