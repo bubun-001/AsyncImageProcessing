@@ -27,7 +27,7 @@ public class HelloApplication extends Application {
         drawMultipleImage.initialize(stage);
         ImageProcessor processor = new ImageProcessor();
         ImageFilter imageFilter = new GreyScaleFilter();
-        processor.processImage(image, 10,imageFilter);
+        processor.processImage(image, 10, imageFilter, drawMultipleImage);
 
 
     }
