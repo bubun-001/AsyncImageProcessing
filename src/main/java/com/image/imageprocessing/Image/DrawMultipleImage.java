@@ -42,14 +42,13 @@ public class DrawMultipleImage {
             public void handle(long now) {
                 // Todo: poll the image from queue, spin a thread and draw
                 if (!isDrawing && !queue.isEmpty()) {
-                    isDrawing = true;
-                    Thread.startVirtualThread(() -> {
+                    new Thread(() -> {
                         try{
                             drawNextImage();
                         }finally {
                             isDrawing = false;
                         }
-                    });
+                    }).start();
                 }
             }
         }.start();
@@ -67,9 +66,7 @@ public class DrawMultipleImage {
             if(imageData != null){
                 this.gc.drawImage(SwingFXUtils.toFXImage(imageData.getImage(), null),
                         imageData.getI(), imageData.getJ(), imageData.getX(), imageData.getY());
-                String threadName = Thread.currentThread().getName();
-                boolean isVirtual = Thread.currentThread().isVirtual();
-                System.out.println(String.format("Drawing using thread %s (Virtual: %s)", threadName, isVirtual));
+                System.out.println("Drawing using thread "+Thread.currentThread().getName());
                 System.out.println(String.format("Drawing image at i: %s, j: %s", imageData.getI(), imageData.getJ()));
             }
         });

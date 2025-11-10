@@ -1,39 +1,41 @@
-package com.image.imageprocessing.processor;
+package com.image.imageprocessing.processor.os;
 
-import com.image.imageprocessing.Filters.ImageFilter;
-import com.image.imageprocessing.Image.DrawMultipleImage;
 import com.image.imageprocessing.Image.ImageData;
-
+import com.image.imageprocessing.processor.common.ImageProcessor;
+import com.image.imageprocessing.Image.*;
 import java.awt.image.BufferedImage;
+import com.image.imageprocessing.Filters.*;
+import java.awt.image.ImageFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
-public class ImageProcessor {
+public class OSImageProcessor implements ImageProcessor {
+
 
     private ExecutorService executorService;
     private DrawMultipleImage drawFn;
 
-    public ImageProcessor(){
-        // Use virtual threads for better performance and resource utilization
-        executorService = Executors.newVirtualThreadPerTaskExecutor();
+    public OSImageProcessor(){
+        executorService = Executors.newFixedThreadPool(100);
     }
 
+   @Override
     public void processImage(BufferedImage image, int num, ImageFilter imageFilter, DrawMultipleImage drawFn){
         int numHorizontalImages = image.getWidth() / num;
         int numVerticalImages = image.getHeight() / num;
         int totalTasks = numHorizontalImages * numVerticalImages;
 
-        System.out.println("Starting image processing with virtual threads...");
-        System.out.println("Total tasks: " + totalTasks);
-        System.out.println("Using virtual threads: " + Thread.currentThread().isVirtual());
-
         List<Future<ImageData>> futures = new ArrayList<>();
-        long startTime = System.currentTimeMillis();
+        AtomicLong totalTaskTimeMs = new AtomicLong(0);
+        AtomicBoolean anyVirtual = new AtomicBoolean(false);
+
+        long overallStartNs = System.nanoTime();
 
         for (int i = 0; i<numHorizontalImages; i++){
             for(int j=0; j<numVerticalImages; j++){
@@ -43,19 +45,16 @@ public class ImageProcessor {
                 Future<ImageData> future = executorService.submit(new Callable<ImageData>() {
                     @Override
                     public ImageData call(){
-                        long taskStart = System.currentTimeMillis();
-                        String threadName = Thread.currentThread().getName();
-                        boolean isVirtual = Thread.currentThread().isVirtual();
-                        
+                        long startMs = System.currentTimeMillis();
+                        if (Thread.currentThread().isVirtual()) {
+                            anyVirtual.set(true);
+                        }
                         BufferedImage result = imageFilter.filter(subImage);
                         ImageData imageData = new ImageData(result, finalI *num, finalJ *num, num, num);
-                        
-                        long taskEnd = System.currentTimeMillis();
-                        System.out.println(String.format("Task (%d,%d) completed by %s (Virtual: %s) in %d ms", 
-                            finalI, finalJ, threadName, isVirtual, taskEnd - taskStart));
-                        
                         // Add to queue immediately when processing is complete
                         drawFn.addImageToQueue(imageData);
+                        long endMs = System.currentTimeMillis();
+                        totalTaskTimeMs.addAndGet(endMs - startMs);
                         return imageData;
                     }
                 });
@@ -71,9 +70,12 @@ public class ImageProcessor {
             }
         }
 
-        long endTime = System.currentTimeMillis();
-        System.out.println(String.format("All %d tasks completed in %d ms using virtual threads", 
-            totalTasks, endTime - startTime));
-    }
+        long overallEndNs = System.nanoTime();
+        long avgPerTaskMs = totalTasks > 0 ? totalTaskTimeMs.get() / totalTasks : 0;
+        String threadType = anyVirtual.get() ? "Virtual Threads" : "OS Threads";
 
+        System.out.println("Threads Type\tNumber of Sub-Images\tAvg Time (ms)");
+        System.out.println(threadType + "\t" + totalTasks + "\t" + avgPerTaskMs);
+
+    }
 }
