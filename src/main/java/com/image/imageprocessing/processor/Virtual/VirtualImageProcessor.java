@@ -3,9 +3,9 @@ package com.image.imageprocessing.processor.Virtual;
 import com.image.imageprocessing.Image.DrawMultipleImage;
 import com.image.imageprocessing.Image.ImageData;
 import com.image.imageprocessing.processor.common.ImageProcessor;
-
+import com.image.imageprocessing.Filters.ImageFilter;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageFilter;
+//import java.awt.image.ImageFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;

@@ -1,9 +1,9 @@
 package com.image.imageprocessing.processor.common;
 
 import com.image.imageprocessing.Image.DrawMultipleImage;
-
+import com.image.imageprocessing.Filters.ImageFilter;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageFilter;
+//import java.awt.image.ImageFilter;
 
 public interface ImageProcessor {
 
