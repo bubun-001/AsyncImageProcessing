@@ -25,7 +25,7 @@ public class HelloApplication extends Application {
         //  Read image from disk
         ImageReadInf imageRead = new ImageRead();
         BufferedImage image = imageRead.readImage(
-                "/Users/lalaamartyachand/IdeaProjects/ImageProcessing/src/main/java/com/image/imageprocessing/Image/test.jpg"
+                "/Users/lalaamartyachand/IdeaProjects/ImageProcessing/src/main/java/com/image/imageprocessing/Image/test1.jpg"
         );
 
         // Initialize drawing utility (shared canvas)
@@ -38,8 +38,8 @@ public class HelloApplication extends Application {
         // Choose which processor to test
         // You can switch these lines to compare performance:
         // ImageProcessor processor = new OSImageProcessor();
-        // ImageProcessor processor = new VirtualImageProcessor();
-        ImageProcessor processor = new HybridImageProcessor();
+         ImageProcessor processor = new VirtualImageProcessor();
+          // ImageProcessor processor = new HybridImageProcessor();
 
         // Process the image
         processor.processImage(image, 10, imageFilter, drawMultipleImage);

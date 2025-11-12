@@ -33,9 +33,9 @@ public class DrawMultipleImage {
     }
 
     public void initialize(Stage primaryStage){
-        Canvas canvas = new Canvas(1920, 1080);
+        Canvas canvas = new Canvas(1280, 720);
         this.gc = canvas.getGraphicsContext2D();
-        this.gc.clearRect(0,0, 1920, 1080);
+        this.gc.clearRect(0,0, 1280, 720);
 
         new AnimationTimer() {
             @Override
@@ -54,7 +54,7 @@ public class DrawMultipleImage {
         }.start();
 
         StackPane stack = new StackPane(canvas);
-        Scene scene = new Scene(stack, 1920, 1080);
+        Scene scene = new Scene(stack, 1280, 720);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Canvas Example");
         primaryStage.show();
