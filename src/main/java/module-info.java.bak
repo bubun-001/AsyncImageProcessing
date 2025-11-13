@@ -12,9 +12,15 @@ module com.image.imageprocessing {
     requires com.almasb.fxgl.all;
     requires java.desktop;
     requires javafx.swing;
+    requires jdk.httpserver;
+    requires io.micrometer.core;
+    requires io.micrometer.prometheusmetrics;
     //requires com.image.imageprocessing;
 
     opens com.image.imageprocessing to javafx.fxml;
     exports com.image.imageprocessing;
     exports com.image.imageprocessing.Image;
+
+    exports com.image.imageprocessing.metrics;
+    opens com.image.imageprocessing.metrics to javafx.fxml;
 }

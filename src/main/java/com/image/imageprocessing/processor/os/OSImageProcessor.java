@@ -4,6 +4,7 @@ package com.image.imageprocessing.processor.os;
 import com.image.imageprocessing.Filters.ImageFilter;
 import com.image.imageprocessing.Image.DrawMultipleImage;
 import com.image.imageprocessing.Image.ImageData;
+import com.image.imageprocessing.metrics.ProcessorMetrics;
 import com.image.imageprocessing.processor.common.ImageProcessor;
 
 import java.awt.image.BufferedImage;
@@ -11,6 +12,8 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class OSImageProcessor implements ImageProcessor {
+
+    private static final String PROCESSOR_TYPE = "os";
 
     private final ExecutorService executor = Executors.newFixedThreadPool(
             Runtime.getRuntime().availableProcessors() * 2
@@ -23,9 +26,7 @@ public class OSImageProcessor implements ImageProcessor {
         int totalTasks = widthChunks * heightChunks;
 
         CompletionService<ImageData> completionService = new ExecutorCompletionService<>(executor);
-        AtomicLong totalTime = new AtomicLong(0);
-
-        long start = System.nanoTime();
+        AtomicLong totalTimeMs = new AtomicLong(0);
 
         for (int i = 0; i < widthChunks; i++) {
             for (int j = 0; j < heightChunks; j++) {
@@ -33,21 +34,30 @@ public class OSImageProcessor implements ImageProcessor {
                 BufferedImage sub = image.getSubimage(i * num, j * num, num, num);
 
                 completionService.submit(() -> {
-                    long t1 = System.currentTimeMillis();
+                    long startNs = System.nanoTime();
                     BufferedImage result = imageFilter.filter(sub);
                     ImageData data = new ImageData(result, fi * num, fj * num, num, num);
                     drawFn.addImageToQueue(data);
-                    totalTime.addAndGet(System.currentTimeMillis() - t1);
+                    long durationNs = System.nanoTime() - startNs;
+                    totalTimeMs.addAndGet(TimeUnit.NANOSECONDS.toMillis(durationNs));
+                    ProcessorMetrics.recordTile(PROCESSOR_TYPE, durationNs);
                     return data;
                 });
             }
         }
 
         for (int k = 0; k < totalTasks; k++) {
-            try { completionService.take(); } catch (InterruptedException ignored) {}
+            try {
+                completionService.take();
+            } catch (InterruptedException ignored) {
+            }
         }
 
-        long avg = totalTasks > 0 ? totalTime.get() / totalTasks : 0;
-        System.out.println("Threads: OS Threads | Tasks: " + totalTasks + " | Avg: " + avg + "ms");
+        long totalMs = totalTimeMs.get();
+        long avg = totalTasks > 0 ? totalMs / totalTasks : 0;
+        ProcessorMetrics.recordSummary(PROCESSOR_TYPE, totalTasks, totalMs);
+
+        System.out.println("Threads Type\tNumber of Sub-Images\tAvg Time (ms)");
+        System.out.println("OS Threads\t" + totalTasks + "\t" + avg);
     }
 }
