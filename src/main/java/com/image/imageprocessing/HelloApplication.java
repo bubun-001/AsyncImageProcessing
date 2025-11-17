@@ -28,7 +28,7 @@ public class HelloApplication extends Application {
                 "/Users/lalaamartyachand/IdeaProjects/ImageProcessing/src/main/java/com/image/imageprocessing/Image/test1.jpg"
         );
 
-        // Initialize drawing utility (shared canvas)
+        // Initialize drawing utility (the shared canvas)
         DrawMultipleImage drawMultipleImage = DrawMultipleImage.getInstance();
         drawMultipleImage.initialize(stage);
 
