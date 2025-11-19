@@ -22,7 +22,7 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         MetricsServer.start(9100);
 
-        //  Read image from disk
+        //  Read image from the disk
         ImageReadInf imageRead = new ImageRead();
         BufferedImage image = imageRead.readImage(
                 "/Users/lalaamartyachand/IdeaProjects/ImageProcessing/src/main/java/com/image/imageprocessing/Image/test1.jpg"
