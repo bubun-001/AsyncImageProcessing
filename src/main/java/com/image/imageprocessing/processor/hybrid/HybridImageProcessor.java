@@ -36,8 +36,28 @@ public class HybridImageProcessor implements ImageProcessor {
                     completionService.submit(() ->
                             osExecutor.submit(() -> {
                                 long startNs = System.nanoTime();
+                                
+                                //Build the cache key
+                               TileKey cacheKey = new TileKey(
+                                imageId,
+                                imageVersion,
+                                fi,
+                                fj,
+                                num,
+                                imageFilter.getClass().getName(),
+                                processorMode
+                               );
+
+                                 //Try reading from the cache 
+                               ImageData cachedData = cache.get(cacheKey);  
+                               if(cachedData!=null){ //cache hit
+                                return cachedData;
+                               } 
+
+
                                 BufferedImage result = imageFilter.filter(sub);
                                 ImageData data = new ImageData(result, fi * num, fj * num, num, num);
+                                cache.put(cacheKey, data);
                                 drawFn.addImageToQueue(data);
                                 long durationNs = System.nanoTime() - startNs;
                                 totalTimeMs.addAndGet(TimeUnit.NANOSECONDS.toMillis(durationNs));

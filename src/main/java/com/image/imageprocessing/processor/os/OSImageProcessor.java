@@ -35,6 +35,24 @@ public class OSImageProcessor implements ImageProcessor {
 
                 completionService.submit(() -> {
                     long startNs = System.nanoTime();
+
+                    //Build the cache key
+                    TileKey cacheKey = new TileKey(
+                        imageId,
+                        imageVersion,
+                        fi,
+                        fj,
+                        num,
+                        imageFilter.getClass().getName(),
+                        processorMode
+                    );
+
+                    //Try reading it from the cache
+                    ImageData cachedData = cache.get(cacheKey);  
+                    if(cachedData!=null){ //cache hit
+                        return cachedData;
+                    }
+
                     BufferedImage result = imageFilter.filter(sub);
                     ImageData data = new ImageData(result, fi * num, fj * num, num, num);
                     drawFn.addImageToQueue(data);
