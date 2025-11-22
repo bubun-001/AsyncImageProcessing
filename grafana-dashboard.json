@@ -1,97 +1,299 @@
 {
   "dashboard": {
-    "title": "Image Processing Performance",
+    "title": "Image Processing Performance & Cache",
+    "tags": ["image-processing", "cache", "performance"],
+    "timezone": "browser",
+    "schemaVersion": 27,
+    "version": 1,
+    "refresh": "5s",
+    "time": {
+      "from": "now-15m",
+      "to": "now"
+    },
     "panels": [
       {
         "id": 1,
         "title": "Average Processing Time per Tile (ms)",
         "type": "stat",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "targets": [
           {
             "expr": "image_processing_last_avg_ms",
-            "legendFormat": "{{processor}}"
+            "legendFormat": "{{processor}}",
+            "refId": "A"
           }
         ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ms",
+            "decimals": 2
+          }
+        },
         "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
       },
       {
         "id": 2,
         "title": "Total Tiles Processed",
         "type": "stat",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "targets": [
           {
             "expr": "image_processing_tiles_total",
-            "legendFormat": "{{processor}}"
+            "legendFormat": "{{processor}}",
+            "refId": "A"
           }
         ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0
+          }
+        },
         "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
       },
       {
         "id": 3,
         "title": "Processing Runs",
         "type": "stat",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "targets": [
           {
             "expr": "image_processing_runs_total",
-            "legendFormat": "{{processor}}"
+            "legendFormat": "{{processor}}",
+            "refId": "A"
           }
         ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0
+          }
+        },
         "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
       },
       {
         "id": 4,
         "title": "Tile Duration (95th percentile)",
-        "type": "graph",
+        "type": "timeseries",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "targets": [
           {
             "expr": "histogram_quantile(0.95, rate(image_processing_tile_duration_seconds_bucket[5m]))",
-            "legendFormat": "P95 - {{processor}}"
+            "legendFormat": "P95 - {{processor}}",
+            "refId": "A"
           }
         ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "decimals": 3
+          }
+        },
         "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
       },
       {
         "id": 5,
         "title": "Tile Processing Rate",
-        "type": "graph",
+        "type": "timeseries",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "targets": [
           {
             "expr": "rate(image_processing_tiles_total[1m])",
-            "legendFormat": "{{processor}}"
+            "legendFormat": "{{processor}}",
+            "refId": "A"
           }
         ],
-        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 16}
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ops",
+            "decimals": 2
+          }
+        },
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16}
       },
       {
         "id": 6,
         "title": "Total Processing Time (ms)",
         "type": "stat",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "targets": [
           {
             "expr": "image_processing_last_total_time_ms",
-            "legendFormat": "{{processor}}"
+            "legendFormat": "{{processor}}",
+            "refId": "A"
           }
         ],
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24}
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ms",
+            "decimals": 0
+          }
+        },
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}
       },
       {
         "id": 7,
-        "title": "Max Tile Duration",
-        "type": "stat",
+        "title": "Cache Hit Rate",
+        "type": "gauge",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "targets": [
           {
-            "expr": "image_processing_tile_duration_seconds_max * 1000",
-            "legendFormat": "{{processor}} (ms)"
+            "expr": "cache_hit_rate",
+            "legendFormat": "Hit Rate",
+            "refId": "A"
           }
         ],
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24}
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percentunit",
+            "min": 0,
+            "max": 1,
+            "decimals": 2
+          }
+        },
+        "gridPos": {"h": 8, "w": 8, "x": 0, "y": 24}
+      },
+      {
+        "id": 8,
+        "title": "Cache Hits",
+        "type": "stat",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "expr": "cache_hits_total",
+            "legendFormat": "Hits",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0
+          }
+        },
+        "gridPos": {"h": 8, "w": 8, "x": 8, "y": 24}
+      },
+      {
+        "id": 9,
+        "title": "Cache Misses",
+        "type": "stat",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "expr": "cache_misses_total",
+            "legendFormat": "Misses",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0
+          }
+        },
+        "gridPos": {"h": 8, "w": 8, "x": 16, "y": 24}
+      },
+      {
+        "id": 10,
+        "title": "Cache Size",
+        "type": "stat",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "expr": "cache_size",
+            "legendFormat": "Size",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0
+          }
+        },
+        "gridPos": {"h": 8, "w": 8, "x": 0, "y": 32}
+      },
+      {
+        "id": 11,
+        "title": "Cache Evictions",
+        "type": "stat",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "expr": "cache_evictions_total",
+            "legendFormat": "Evictions",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0
+          }
+        },
+        "gridPos": {"h": 8, "w": 8, "x": 8, "y": 32}
+      },
+      {
+        "id": 12,
+        "title": "Cache Performance Over Time",
+        "type": "timeseries",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "expr": "cache_hits_total",
+            "legendFormat": "Hits",
+            "refId": "A"
+          },
+          {
+            "expr": "cache_misses_total",
+            "legendFormat": "Misses",
+            "refId": "B"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0
+          }
+        },
+        "gridPos": {"h": 8, "w": 16, "x": 16, "y": 32}
       }
-    ],
-    "refresh": "5s",
-    "time": {
-      "from": "now-15m",
-      "to": "now"
-    }
+    ]
   }
 }
-

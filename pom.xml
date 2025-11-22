@@ -86,6 +86,9 @@
                 </executions>
                 <configuration>
                     <mainClass>com.image.imageprocessing.HelloApplication</mainClass>
+                    <options>
+                        <option>-Dtile.cache.capacity=10000</option>
+                    </options>
                 </configuration>
             </plugin>
         </plugins>

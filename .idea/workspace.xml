@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="608c6064-76d4-4100-94d1-c4ddc31c6aa7" name="Changes" comment="" />
+    <list default="true" id="608c6064-76d4-4100-94d1-c4ddc31c6aa7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/image/imageprocessing/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/image/imageprocessing/HelloApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/image/imageprocessing/cache/TileKey.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/image/imageprocessing/cache/TileKey.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/image/imageprocessing/processor/Virtual/VirtualImageProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/image/imageprocessing/processor/Virtual/VirtualImageProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/image/imageprocessing/processor/hybrid/HybridImageProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/image/imageprocessing/processor/hybrid/HybridImageProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/image/imageprocessing/processor/os/OSImageProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/image/imageprocessing/processor/os/OSImageProcessor.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
