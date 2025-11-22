@@ -26,6 +26,12 @@ import java.io.IOException;
 
 public class HelloApplication extends Application {
 
+    // ============================================
+    // PROCESSOR MODE CONFIGURATION
+    // Change this value to switch processor modes: "os", "hybrid", or "virtual"
+    // ============================================
+    private static final String PROCESSOR_MODE = "os";
+
     @Override
     public void start(Stage stage) throws IOException {
         MetricsServer.start(9100);
@@ -45,7 +51,7 @@ public class HelloApplication extends Application {
         // Choose filter
         ImageFilter imageFilter = new GreyScaleFilter();
 
-        String processorMode = System.getProperty("processor.mode", "virtual").toLowerCase();
+        String processorMode = PROCESSOR_MODE.toLowerCase();
         ImageProcessor processor = switch (processorMode) {
             case "os" -> new OSImageProcessor();
             case "hybrid" -> new HybridImageProcessor();

@@ -5,9 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * Simple in-memory event bus based on the observer pattern.
- */
+
 public final class EventBus {
 
     private static final EventBus INSTANCE = new EventBus();
