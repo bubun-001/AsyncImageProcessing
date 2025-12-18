@@ -120,6 +120,16 @@ Once running, access metrics at:
 
 ---
 
+## 🎥 Demo
+
+Watch the image processing in action! The application processes images in parallel tiles, showing real-time rendering as each tile completes.
+
+![Image Processing Demo](docs/demo.gif)
+
+*Tiles are processed in parallel using OS threads, Virtual threads, or Hybrid approach, with intelligent caching and real-time visualization.*
+
+---
+
 ## ⚙️ Configuration
 
 ### Processor Mode Selection
